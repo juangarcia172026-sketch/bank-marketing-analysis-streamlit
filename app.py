@@ -29,7 +29,7 @@ Este proyecto realiza un Análisis Exploratorio de Datos (EDA) sobre una base de
 # CARGA DEL DATASET
 # ============================
 
-df = pd.read_csv("data/BankMarketing.csv")
+df = pd.read_csv("data/BankMarketing.csv", sep=';')
 
 st.subheader("Vista previa del dataset")
 st.write(df.head())
