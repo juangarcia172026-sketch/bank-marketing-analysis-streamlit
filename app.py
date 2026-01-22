@@ -40,9 +40,10 @@ st.write(df.head())
 
 st.subheader("Información general del dataset")
 
-buffer = []
-df.info(buf=buffer.append)
-info_str = "".join(buffer)
+import io
+buffer = io.StringIO()
+df.info(buf=buffer)
+info_str = buffer.getvalue()
 st.text(info_str)
 
 st.write("### Tipos de datos")
@@ -50,6 +51,7 @@ st.write(df.dtypes)
 
 st.write("### Valores nulos")
 st.write(df.isna().sum())
+
 
 # ============================
 # CLASIFICACIÓN DE VARIABLES
