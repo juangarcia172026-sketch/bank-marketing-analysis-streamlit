@@ -38,8 +38,6 @@ El dataset proporcionado contiene información relevante sobre los clientes:
 Tu trabajo consiste en realizar un Análisis Exploratorio de Datos (EDA) que permita identificar patrones, relaciones y posibles causas del churn. Estos hallazgos servirán como base para el desarrollo de modelos predictivos y estrategias de retención.
 """
 
-from google.colab import drive
-drive.mount('/content/drive')
 
 """## 1. Importar librerías"""
 
