@@ -49,7 +49,7 @@ import plotly.express as px
 
 """##2. Cargar el dataset correctamente"""
 
-df = pd.read_csv('/content/BankMarketing.csv')
+df = pd.read_csv('data/BankMarketing.csv')
 df.head()
 
 df.info()
