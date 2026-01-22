@@ -3,9 +3,15 @@
 
 # Módulo 1: Home (Presentación del proyecto)
 
-##Evaluación del Comportamiento del Cliente y Churn en una Empresa de **Telecomunicaciones**
+## Análisis de Campañas de Marketing Bancario
 
-###El análisis tiene como propósito identificar los factores que impulsan la pérdida de clientes en AndesTel y evaluar los patrones de comportamiento asociados al churn. Esta información permitirá a la empresa anticipar riesgos de cancelación, optimizar sus estrategias de retención y fortalecer la relación con los clientes mediante decisiones basadas en datos.
+### El análisis busca:
+
+- Identificar las variables más asociadas a la aceptación de la campaña (`y`).
+- Explorar el perfil de los clientes que responden positivamente.
+- Evaluar el impacto de la duración del contacto, el canal utilizado y la recencia del último contacto.
+- Analizar el rol de variables macroeconómicas en el comportamiento de los clientes.
+
 
 ###Datos del autor:   
   o Nombre completo: Juan García Soto  
@@ -14,30 +20,17 @@
 
 ##Breve explicación del dataset
 
-##Análisis Exploratorio de Datos (EDA)  
-AndesTel es una empresa peruana de telecomunicaciones con más de 20 años de presencia en el mercado. Ofrece servicios de telefonía móvil, internet fijo, televisión por cable y paquetes integrados para hogares y empresas. Su cartera de clientes está compuesta por dos grandes segmentos: clientes residenciales y clientes corporativos, siendo el segmento residencial el que concentra la mayor parte de los ingresos (aproximadamente el 70%).
-Durante los últimos años, AndesTel ha experimentado un crecimiento sostenido en la adquisición de nuevos clientes, impulsado por la expansión de la fibra óptica y la demanda creciente de servicios digitales. Sin embargo, también ha enfrentado un incremento en la tasa de cancelación de servicios (churn), especialmente en los productos de internet y telefonía móvil, debido a la fuerte competencia del sector y a la sensibilidad de los usuarios frente a la calidad del servicio y los precios.  
+El dataset de marketing bancario contiene información sobre clientes y campañas de marketing directo realizadas por un banco. Incluye:
 
-##ROL DEL ÁREA DE ANALÍTICA Y GESTIÓN DEL CLIENTE  
-El área de Analítica Avanzada y Gestión del Cliente tiene como misión apoyar a las unidades comerciales y de servicio mediante el desarrollo de modelos estadísticos y herramientas de segmentación. Su objetivo es identificar patrones de comportamiento, anticipar necesidades y reducir la pérdida de clientes.  
-Entre sus funciones principales se encuentran:  
-- Construir modelos predictivos que permitan estimar la probabilidad de que un cliente abandone la empresa.  
-- Identificar factores clave asociados al churn, como calidad del servicio, antigüedad, tipo de contrato, consumo y reclamos.  
-- Proponer estrategias de retención basadas en datos, como ofertas personalizadas, mejoras en la experiencia del cliente o intervenciones preventivas.  
+- **Variables demográficas:** edad, estado civil, nivel educativo.
+- **Variables laborales:** tipo de trabajo (`job`).
+- **Variables financieras:** saldo promedio, créditos, préstamos.
+- **Variables de contacto:** tipo de contacto (`contact`), duración de la llamada (`duration`), número de contactos previos (`campaign`, `pdays`, `previous`).
+- **Variables macroeconómicas:** índices económicos y de confianza.
+- **Variable objetivo:** `y`, que indica si el cliente aceptó (`yes`) o no (`no`) la oferta.
 
-##TU ROL  
-Como especialista en Data Science, tu responsabilidad es analizar la base de datos de clientes de AndesTel para comprender qué variables influyen en la decisión de cancelar el servicio. A partir de esta información, debes generar insights que permitan al área comercial y de servicio tomar decisiones informadas.  
-El dataset proporcionado contiene información relevante sobre los clientes:  
-- Características demográficas  
-- Tipo de servicio contratado  
-- Antigüedad  
-- Métodos de pago  
-- Consumo mensual  
-- Historial de reclamos  
-- Estado actual (activo o churn)  
-Tu trabajo consiste en realizar un Análisis Exploratorio de Datos (EDA) que permita identificar patrones, relaciones y posibles causas del churn. Estos hallazgos servirán como base para el desarrollo de modelos predictivos y estrategias de retención.
+El propósito del EDA es generar insights que permitan diseñar campañas más efectivas, segmentar mejor a los clientes y optimizar los recursos comerciales.
 """
-
 
 """## 1. Importar librerías"""
 
@@ -193,10 +186,10 @@ print("""
 """)
 
 """## Conclusiones finales
-1.- Los clientes con contratos mensuales presentan una mayor probabilidad de churn, lo que evidencia la necesidad de fortalecer estrategias de fidelización y migración hacia contratos de mayor permanencia, donde el riesgo de cancelación es significativamente menor.  
-2.- Los usuarios con cargos mensuales elevados muestran una mayor tendencia a abandonar el servicio, lo que sugiere que la sensibilidad al precio es un factor crítico. Esto abre la oportunidad de diseñar planes más competitivos, descuentos segmentados o paquetes personalizados para retener a estos clientes.  
-3.- La falta de servicios adicionales (como seguridad digital, soporte premium o servicios complementarios) se asocia con una mayor tasa de churn. Los clientes con menos productos contratados tienden a percibir menor valor, por lo que impulsar estrategias de cross-selling podría reducir la deserción.  
-4.- Los clientes con menor antigüedad en la empresa presentan mayor riesgo de cancelación, lo que indica la importancia de reforzar la experiencia inicial del cliente, especialmente durante los primeros meses, mediante programas de onboarding y seguimiento proactivo.  
-5.- Los métodos de pago electrónicos y automáticos se correlacionan con una menor probabilidad de churn, lo que sugiere que incentivar estos mecanismos puede mejorar la retención al reducir fricciones en la gestión de pagos y aumentar la continuidad del servicio.
-
+1. La duración del contacto (`duration`) es el factor más determinante para la aceptación de la campaña. Cuanto mayor es el tiempo de conversación, mayor es la probabilidad de obtener una respuesta positiva.
+2. Los clientes contactados recientemente (`pdays` bajos) muestran una mayor disposición a aceptar la oferta, lo que sugiere que la recencia del contacto es clave en la estrategia comercial.
+3. El canal de contacto celular (`contact = cellular`) es más efectivo que el teléfono fijo, indicando que los clientes responden mejor a medios más directos y personales.
+4. Variables macroeconómicas como `euribor3m` y `cons.price.idx` influyen en el comportamiento del cliente, lo que evidencia que el contexto económico afecta la decisión final.
+5. El perfil del cliente —incluyendo profesión (`job`), nivel educativo (`education`) y estado civil (`marital`)— tiene un impacto significativo en la probabilidad de éxito de la campaña, permitiendo segmentar mejor las acciones de marketing.
+Estas conclusiones permiten orientar estrategias más efectivas, optimizar recursos y mejorar la tasa de conversión en campañas futuras.
 """
