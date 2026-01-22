@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 # TÍTULO Y PRESENTACIÓN
 # ============================
 
-st.title("📊 Análisis de Campañas de Marketing Bancario")
+st.title("Análisis de Campañas de Marketing Bancario")
 st.markdown("""
 Este proyecto realiza un Análisis Exploratorio de Datos (EDA) sobre una base de datos de campañas de marketing directo de una entidad bancaria.
 
@@ -31,14 +31,14 @@ Este proyecto realiza un Análisis Exploratorio de Datos (EDA) sobre una base de
 
 df = pd.read_csv("data/BankMarketing.csv")
 
-st.subheader("📁 Vista previa del dataset")
+st.subheader("Vista previa del dataset")
 st.write(df.head())
 
 # ============================
 # INFORMACIÓN GENERAL
 # ============================
 
-st.subheader("📌 Información general del dataset")
+st.subheader("Información general del dataset")
 
 buffer = []
 df.info(buf=buffer.append)
@@ -58,7 +58,7 @@ st.write(df.isna().sum())
 numeric_cols = df.select_dtypes(include=['int64', 'float64']).columns.tolist()
 categorical_cols = df.select_dtypes(include=['object']).columns.tolist()
 
-st.subheader("🔎 Clasificación de variables")
+st.subheader("Clasificación de variables")
 st.write("**Variables numéricas:**", numeric_cols)
 st.write("**Variables categóricas:**", categorical_cols)
 
@@ -66,14 +66,14 @@ st.write("**Variables categóricas:**", categorical_cols)
 # ESTADÍSTICAS DESCRIPTIVAS
 # ============================
 
-st.subheader("📈 Estadísticas descriptivas")
+st.subheader("Estadísticas descriptivas")
 st.write(df.describe(include='all'))
 
 # ============================
 # VALORES FALTANTES
 # ============================
 
-st.subheader("🧩 Valores faltantes")
+st.subheader("Valores faltantes")
 
 missing = df.isna().sum()
 st.write(missing)
@@ -91,7 +91,7 @@ else:
 # DISTRIBUCIÓN DE VARIABLES NUMÉRICAS
 # ============================
 
-st.subheader("📊 Distribución de variables numéricas")
+st.subheader("Distribución de variables numéricas")
 
 col_num = st.selectbox("Selecciona una variable numérica:", numeric_cols)
 
@@ -103,7 +103,7 @@ st.pyplot(fig)
 # VARIABLES CATEGÓRICAS
 # ============================
 
-st.subheader("📊 Distribución de variables categóricas")
+st.subheader("Distribución de variables categóricas")
 
 col_cat = st.selectbox("Selecciona una variable categórica:", categorical_cols)
 
@@ -116,7 +116,7 @@ st.pyplot(fig)
 # ANÁLISIS BIVARIADO
 # ============================
 
-st.subheader("📉 Análisis bivariado")
+st.subheader("Análisis bivariado")
 
 st.write("### Numérico vs Variable objetivo (y)")
 col_num2 = st.selectbox("Selecciona variable numérica:", numeric_cols, key="num2")
@@ -141,7 +141,7 @@ if col_cat2 != 'y':
 # ANÁLISIS PERSONALIZADO
 # ============================
 
-st.subheader("🎯 Análisis basado en parámetros seleccionados")
+st.subheader("Análisis basado en parámetros seleccionados")
 
 x = st.selectbox("Variable X:", numeric_cols, key="scatter_x")
 y = st.selectbox("Variable Y:", numeric_cols, key="scatter_y")
@@ -154,7 +154,7 @@ st.pyplot(fig)
 # HALLAZGOS CLAVE
 # ============================
 
-st.subheader("⭐ Hallazgos clave")
+st.subheader("Hallazgos clave")
 st.markdown("""
 1. La duración de la llamada (`duration`) es el factor más asociado a la aceptación.  
 2. El canal celular es más efectivo que el teléfono fijo.  
@@ -167,7 +167,7 @@ st.markdown("""
 # CONCLUSIONES FINALES
 # ============================
 
-st.subheader("📘 Conclusiones finales")
+st.subheader("Conclusiones finales")
 st.markdown("""
 1. La duración del contacto (`duration`) es el factor más determinante para la aceptación de la campaña.  
 2. Los clientes contactados recientemente (`pdays` bajos) muestran mayor disposición a aceptar la oferta.  
