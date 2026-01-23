@@ -40,8 +40,8 @@ La aplicación permite:
 - Streamlit
 
 ## Ejecución de la aplicación
-Para ejecutar la aplicación localmente:
-pip install -r requirements.txt
+Para ejecutar la aplicación localmente:  
+pip install -r requirements.txt  
 streamlit run app.py
 
 ## Uso de la aplicación
