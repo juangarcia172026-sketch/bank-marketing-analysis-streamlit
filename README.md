@@ -24,13 +24,14 @@ La aplicación permite:
 ## Visualizaciones principales
 
 ### Distribución por edad
-(Imagen próximamente)
+![Distribución por edad](activos/Distribución_por_edad.png)
 
 ### Distribución por profesión
-(Imagen próximamente)
+![Distribución por profesión](activos/Distribución_por_trabajo.png)
 
 ### Relación entre profesión y aceptación (`y`)
-(Imagen próximamente)
+![Trabajo vs y](activos/Trabajo_vs_y.png)
+
 
 ## Tecnologías utilizadas
 - Python
