@@ -6,10 +6,17 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 
 # ============================
+# CONFIGURACIÓN INICIAL
+# ============================
+
+st.set_page_config(page_title="Bank Marketing EDA", layout="wide")
+
+# ============================
 # TÍTULO Y PRESENTACIÓN
 # ============================
 
-st.title("Análisis de Campañas de Marketing Bancario")
+st.title("📊 Análisis de Campañas de Marketing Bancario")
+
 st.markdown("""
 Este proyecto realiza un Análisis Exploratorio de Datos (EDA) sobre una base de datos de campañas de marketing directo de una entidad bancaria.
 
@@ -31,133 +38,165 @@ Este proyecto realiza un Análisis Exploratorio de Datos (EDA) sobre una base de
 
 df = pd.read_csv("data/BankMarketing.csv", sep=';')
 
-st.subheader("Vista previa del dataset")
-st.write(df.head())
-
 # ============================
-# INFORMACIÓN GENERAL
+# SIDEBAR – FILTROS GLOBALES
 # ============================
 
-st.subheader("Información general del dataset")
+st.sidebar.header("🔍 Filtros del Dataset")
 
-import io
-buffer = io.StringIO()
-df.info(buf=buffer)
-info_str = buffer.getvalue()
-st.text(info_str)
+# Slider de edad
+age_range = st.sidebar.slider(
+    "Rango de edad",
+    int(df["age"].min()),
+    int(df["age"].max()),
+    (25, 60)
+)
 
-st.write("### Tipos de datos")
-st.write(df.dtypes)
+# Multiselect de profesiones
+jobs = st.sidebar.multiselect(
+    "Profesiones",
+    df["job"].unique()
+)
 
-st.write("### Valores nulos")
-st.write(df.isna().sum())
+# Checkbox para mostrar dataset completo
+show_data = st.sidebar.checkbox("Mostrar dataset completo")
 
+# Aplicación de filtros
+df_filtered = df[
+    (df["age"] >= age_range[0]) &
+    (df["age"] <= age_range[1])
+]
 
-# ============================
-# CLASIFICACIÓN DE VARIABLES
-# ============================
-
-numeric_cols = df.select_dtypes(include=['int64', 'float64']).columns.tolist()
-categorical_cols = df.select_dtypes(include=['object']).columns.tolist()
-
-st.subheader("Clasificación de variables")
-st.write("**Variables numéricas:**", numeric_cols)
-st.write("**Variables categóricas:**", categorical_cols)
-
-# ============================
-# ESTADÍSTICAS DESCRIPTIVAS
-# ============================
-
-st.subheader("Estadísticas descriptivas")
-st.write(df.describe(include='all'))
+if jobs:
+    df_filtered = df_filtered[df_filtered["job"].isin(jobs)]
 
 # ============================
-# VALORES FALTANTES
+# TABS PRINCIPALES
 # ============================
 
-st.subheader("Valores faltantes")
+tab1, tab2, tab3, tab4, tab5 = st.tabs([
+    "📁 Información General",
+    "📈 Distribuciones",
+    "🔀 Análisis Bivariado",
+    "📊 Análisis Personalizado",
+    "📝 Conclusiones"
+])
 
-missing = df.isna().sum()
-st.write(missing)
+# ============================
+# TAB 1 – INFORMACIÓN GENERAL
+# ============================
 
-missing_nonzero = missing[missing > 0]
+with tab1:
 
-if missing_nonzero.empty:
-    st.success("No hay valores faltantes en el dataset.")
-else:
+    st.subheader("Vista previa del dataset filtrado")
+    st.write(df_filtered.head())
+
+    if show_data:
+        st.dataframe(df_filtered)
+
+    st.subheader("Información general del dataset")
+
+    import io
+    buffer = io.StringIO()
+    df.info(buf=buffer)
+    info_str = buffer.getvalue()
+    st.text(info_str)
+
+    st.write("### Tipos de datos")
+    st.write(df.dtypes)
+
+    st.write("### Valores nulos")
+    st.write(df.isna().sum())
+
+    numeric_cols = df.select_dtypes(include=['int64', 'float64']).columns.tolist()
+    categorical_cols = df.select_dtypes(include=['object']).columns.tolist()
+
+    st.subheader("Clasificación de variables")
+    st.write("**Variables numéricas:**", numeric_cols)
+    st.write("**Variables categóricas:**", categorical_cols)
+
+    st.subheader("Estadísticas descriptivas")
+    st.write(df.describe(include='all'))
+
+# ============================
+# TAB 2 – DISTRIBUCIONES
+# ============================
+
+with tab2:
+
+    st.subheader("Distribución de variables numéricas")
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+        col_num = st.selectbox("Selecciona una variable numérica:", numeric_cols)
+
+    with col2:
+        bins = st.slider("Número de bins", 5, 50, 20)
+
     fig, ax = plt.subplots()
-    missing_nonzero.plot(kind='bar', ax=ax)
+    sns.histplot(df_filtered[col_num], kde=True, bins=bins, ax=ax)
     st.pyplot(fig)
 
-# ============================
-# DISTRIBUCIÓN DE VARIABLES NUMÉRICAS
-# ============================
+    st.subheader("Distribución de variables categóricas")
 
-st.subheader("Distribución de variables numéricas")
-
-col_num = st.selectbox("Selecciona una variable numérica:", numeric_cols)
-
-fig, ax = plt.subplots()
-sns.histplot(df[col_num], kde=True, ax=ax)
-st.pyplot(fig)
-
-# ============================
-# VARIABLES CATEGÓRICAS
-# ============================
-
-st.subheader("Distribución de variables categóricas")
-
-col_cat = st.selectbox("Selecciona una variable categórica:", categorical_cols)
-
-fig, ax = plt.subplots()
-sns.countplot(data=df, x=col_cat, ax=ax)
-plt.xticks(rotation=45)
-st.pyplot(fig)
-
-# ============================
-# ANÁLISIS BIVARIADO
-# ============================
-
-st.subheader("Análisis bivariado")
-
-st.write("### Numérico vs Variable objetivo (y)")
-col_num2 = st.selectbox("Selecciona variable numérica:", numeric_cols, key="num2")
-
-fig, ax = plt.subplots()
-sns.boxplot(data=df, x='y', y=col_num2, ax=ax)
-st.pyplot(fig)
-
-st.write("### Categórico vs Variable objetivo (y)")
-col_cat2 = st.selectbox("Selecciona variable categórica:", categorical_cols, key="cat2")
-
-if col_cat2 != 'y':
-    tabla = pd.crosstab(df[col_cat2], df['y'], normalize='index')
-    st.write(tabla)
+    col_cat = st.selectbox("Selecciona una variable categórica:", categorical_cols)
 
     fig, ax = plt.subplots()
-    tabla.plot(kind='bar', stacked=True, ax=ax)
+    sns.countplot(data=df_filtered, x=col_cat, ax=ax)
     plt.xticks(rotation=45)
     st.pyplot(fig)
 
 # ============================
-# ANÁLISIS PERSONALIZADO
+# TAB 3 – ANÁLISIS BIVARIADO
 # ============================
 
-st.subheader("Análisis basado en parámetros seleccionados")
+with tab3:
 
-x = st.selectbox("Variable X:", numeric_cols, key="scatter_x")
-y = st.selectbox("Variable Y:", numeric_cols, key="scatter_y")
+    st.subheader("Numérico vs Variable objetivo (y)")
 
-fig, ax = plt.subplots()
-sns.scatterplot(data=df, x=x, y=y, hue='y', ax=ax)
-st.pyplot(fig)
+    col_num2 = st.selectbox("Selecciona variable numérica:", numeric_cols, key="num2")
+
+    fig, ax = plt.subplots()
+    sns.boxplot(data=df_filtered, x='y', y=col_num2, ax=ax)
+    st.pyplot(fig)
+
+    st.subheader("Categórico vs Variable objetivo (y)")
+
+    col_cat2 = st.selectbox("Selecciona variable categórica:", categorical_cols, key="cat2")
+
+    if col_cat2 != 'y':
+        tabla = pd.crosstab(df_filtered[col_cat2], df_filtered['y'], normalize='index')
+        st.write(tabla)
+
+        fig, ax = plt.subplots()
+        tabla.plot(kind='bar', stacked=True, ax=ax)
+        plt.xticks(rotation=45)
+        st.pyplot(fig)
 
 # ============================
-# HALLAZGOS CLAVE
+# TAB 4 – ANÁLISIS PERSONALIZADO
 # ============================
 
-st.subheader("Hallazgos clave")
-st.markdown("""
+with tab4:
+
+    st.subheader("Scatterplot personalizado")
+
+    x = st.selectbox("Variable X:", numeric_cols, key="scatter_x")
+    y = st.selectbox("Variable Y:", numeric_cols, key="scatter_y")
+
+    fig, ax = plt.subplots()
+    sns.scatterplot(data=df_filtered, x=x, y=y, hue='y', ax=ax)
+    st.pyplot(fig)
+
+# ============================
+# TAB 5 – CONCLUSIONES
+# ============================
+
+with tab5:
+
+    st.subheader("Hallazgos clave")
+    st.markdown("""
 1. La duración de la llamada (`duration`) es el factor más asociado a la aceptación.  
 2. El canal celular es más efectivo que el teléfono fijo.  
 3. Clientes contactados recientemente (`pdays`) responden mejor.  
@@ -165,12 +204,8 @@ st.markdown("""
 5. El perfil del cliente (`job`, `education`) afecta la probabilidad de éxito.  
 """)
 
-# ============================
-# CONCLUSIONES FINALES
-# ============================
-
-st.subheader("Conclusiones finales")
-st.markdown("""
+    st.subheader("Conclusiones finales")
+    st.markdown("""
 1. La duración del contacto (`duration`) es el factor más determinante para la aceptación de la campaña.  
 2. Los clientes contactados recientemente (`pdays` bajos) muestran mayor disposición a aceptar la oferta.  
 3. El canal celular (`contact = cellular`) es más efectivo que el teléfono fijo.  
