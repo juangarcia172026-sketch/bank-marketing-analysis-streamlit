@@ -15,7 +15,7 @@ st.set_page_config(page_title="Bank Marketing EDA", layout="wide")
 # TÍTULO Y PRESENTACIÓN
 # ============================
 
-st.title("📊 Análisis de Campañas de Marketing Bancario")
+st.title("Análisis de Campañas de Marketing Bancario")
 
 st.markdown("""
 Este proyecto realiza un Análisis Exploratorio de Datos (EDA) sobre una base de datos de campañas de marketing directo de una entidad bancaria.
@@ -42,7 +42,7 @@ df = pd.read_csv("data/BankMarketing.csv", sep=';')
 # SIDEBAR – FILTROS GLOBALES
 # ============================
 
-st.sidebar.header("🔍 Filtros del Dataset")
+st.sidebar.header("Filtros del Dataset")
 
 # Slider de edad
 age_range = st.sidebar.slider(
@@ -75,11 +75,11 @@ if jobs:
 # ============================
 
 tab1, tab2, tab3, tab4, tab5 = st.tabs([
-    "📁 Información General",
-    "📈 Distribuciones",
-    "🔀 Análisis Bivariado",
-    "📊 Análisis Personalizado",
-    "📝 Conclusiones"
+    " Información General",
+    " Distribuciones",
+    " Análisis Bivariado",
+    " Análisis Personalizado",
+    " Conclusiones"
 ])
 
 # ============================
