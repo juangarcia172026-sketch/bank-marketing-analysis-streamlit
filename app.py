@@ -4,6 +4,7 @@ import pandas as pd
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
+from scipy import stats
 
 # ============================
 # CONFIGURACIÓN INICIAL
@@ -12,7 +13,29 @@ import matplotlib.pyplot as plt
 st.set_page_config(page_title="Bank Marketing EDA", layout="wide")
 
 # ============================
-# TÍTULO Y PRESENTACIÓN
+# CLASE POO – DataAnalyzer
+# ============================
+
+class DataAnalyzer:
+
+    def __init__(self, df):
+        self.df = df
+
+    def classify_variables(self):
+        numeric = self.df.select_dtypes(include=['int64', 'float64']).columns.tolist()
+        categorical = self.df.select_dtypes(include=['object']).columns.tolist()
+        return numeric, categorical
+
+    def descriptive_stats(self):
+        desc = self.df.describe(include='all')
+        mode_vals = self.df.mode().iloc[0]
+        return desc, mode_vals
+
+    def missing_values(self):
+        return self.df.isna().sum()
+
+# ============================
+# MÓDULO 1: HOME
 # ============================
 
 st.title("Análisis de Campañas de Marketing Bancario")
@@ -29,22 +52,45 @@ Este proyecto realiza un Análisis Exploratorio de Datos (EDA) sobre una base de
 ### Datos del autor:
 - **Nombre:** Juan García Soto  
 - **Curso:** ESP EN PYTHON FOR ANALYTICS ed.53  
-- **Año:** 2025 - 2026
+- **Año:** 2025 - 2026  
+
+### Tecnologías utilizadas:
+Python, Pandas, NumPy, Matplotlib, Seaborn, Streamlit
 """)
 
 # ============================
-# CARGA DEL DATASET
+# MÓDULO 2: CARGA DEL DATASET
 # ============================
 
-df = pd.read_csv("data/BankMarketing.csv", sep=';')
+st.subheader("Carga del dataset")
+
+uploaded_file = st.file_uploader("Sube el archivo BankMarketing.csv", type=["csv"])
+
+if uploaded_file is None:
+    st.warning("Por favor sube el archivo para continuar.")
+    st.stop()
+
+df = pd.read_csv(uploaded_file, sep=';')
+
+st.success("Archivo cargado correctamente.")
+
+st.write("### Vista previa del dataset")
+st.write(df.head())
+
+st.write(f"**Dimensiones:** {df.shape[0]} filas × {df.shape[1]} columnas")
+
+# Crear instancia del analizador
+analyzer = DataAnalyzer(df)
+
+# Clasificación de variables
+numeric_cols, categorical_cols = analyzer.classify_variables()
 
 # ============================
-# SIDEBAR – FILTROS GLOBALES
+# SIDEBAR – FILTROS
 # ============================
 
 st.sidebar.header("Filtros del Dataset")
 
-# Slider de edad
 age_range = st.sidebar.slider(
     "Rango de edad",
     int(df["age"].min()),
@@ -52,16 +98,10 @@ age_range = st.sidebar.slider(
     (25, 60)
 )
 
-# Multiselect de profesiones
-jobs = st.sidebar.multiselect(
-    "Profesiones",
-    df["job"].unique()
-)
+jobs = st.sidebar.multiselect("Profesiones", df["job"].unique())
 
-# Checkbox para mostrar dataset completo
 show_data = st.sidebar.checkbox("Mostrar dataset completo")
 
-# Aplicación de filtros
 df_filtered = df[
     (df["age"] >= age_range[0]) &
     (df["age"] <= age_range[1])
@@ -75,11 +115,11 @@ if jobs:
 # ============================
 
 tab1, tab2, tab3, tab4, tab5 = st.tabs([
-    " Información General",
-    " Distribuciones",
-    " Análisis Bivariado",
-    " Análisis Personalizado",
-    " Conclusiones"
+    "Información General",
+    "Distribuciones",
+    "Análisis Bivariado",
+    "Análisis Personalizado",
+    "Conclusiones"
 ])
 
 # ============================
@@ -88,35 +128,33 @@ tab1, tab2, tab3, tab4, tab5 = st.tabs([
 
 with tab1:
 
-    st.subheader("Vista previa del dataset filtrado")
-    st.write(df_filtered.head())
+    st.subheader("Información general del dataset")
 
     if show_data:
         st.dataframe(df_filtered)
 
-    st.subheader("Información general del dataset")
-
+    # Info
     import io
     buffer = io.StringIO()
     df.info(buf=buffer)
-    info_str = buffer.getvalue()
-    st.text(info_str)
+    st.text(buffer.getvalue())
 
     st.write("### Tipos de datos")
     st.write(df.dtypes)
 
     st.write("### Valores nulos")
-    st.write(df.isna().sum())
-
-    numeric_cols = df.select_dtypes(include=['int64', 'float64']).columns.tolist()
-    categorical_cols = df.select_dtypes(include=['object']).columns.tolist()
+    st.write(analyzer.missing_values())
 
     st.subheader("Clasificación de variables")
     st.write("**Variables numéricas:**", numeric_cols)
     st.write("**Variables categóricas:**", categorical_cols)
 
     st.subheader("Estadísticas descriptivas")
-    st.write(df.describe(include='all'))
+    desc, mode_vals = analyzer.descriptive_stats()
+    st.write(desc)
+
+    st.write("### Moda de cada variable")
+    st.write(mode_vals)
 
 # ============================
 # TAB 2 – DISTRIBUCIONES
